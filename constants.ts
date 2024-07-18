@@ -40,3 +40,21 @@ export const actions: Action[] = [
 // if you are using private API, keep it in env 
   export const BASE_URL = "http://10.0.2.2:8000/predict";
  
+  export const plantList = [
+    {
+      title: 'Bell Pepper',
+      value:"bell_pepper",
+      image_path: require('./assets/bell_pepper.jpeg')
+    },
+    {
+      title: 'Potato',
+      value:"potato",
+      image_path: require('./assets/potato.jpeg')
+    },
+    {
+      title: 'Tomato',
+      value:"tomato",
+      image_path: require('./assets/tomato.jpeg')
+    },
+    
+  ];
