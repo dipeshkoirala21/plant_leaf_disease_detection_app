@@ -1,4 +1,4 @@
-import React, {  useEffect,  useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   Image,
@@ -14,18 +14,14 @@ import {
   Modal,
   Alert,
   PermissionsAndroid,
+  ToastAndroid,
 } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { BASE_URL, actions, plantList } from './constants';
 import * as ImagePicker from 'react-native-image-picker';
 import axios from 'axios';
 
-
-
-
 export const { height, width } = Dimensions.get('window');
-
-
 
 export const fonts = {
   Bold: { fontFamily: 'Roboto-Bold' },
@@ -50,9 +46,9 @@ const App: React.FC = () => {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.CAMERA,
         {
-          title: 'Cool Photo App Camera Permission',
+          title: 'This App Camera Permission',
           message:
-            'Cool Photo App needs access to your camera ' +
+            'This App needs access to your camera ' +
             'so you can take awesome pictures.',
           buttonNeutral: 'Ask Me Later',
           buttonNegative: 'Cancel',
@@ -69,7 +65,7 @@ const App: React.FC = () => {
             console.log('User tapped custom button: ', response.customButton);
           } else {
             const uri = response?.assets[0]?.uri;
-            console.log(uri,'uriiiii')
+            console.log(uri, 'uriiiii')
             const path = Platform.OS !== 'ios' ? uri : 'file://' + uri;
             getResult(path, response);
           }
@@ -111,7 +107,7 @@ const App: React.FC = () => {
 
   }, []);
 
-  const openLibrary=(options:any)=>{
+  const openLibrary = (options: any) => {
     ImagePicker.launchImageLibrary(options, async (response: any) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
@@ -131,7 +127,7 @@ const App: React.FC = () => {
     if (plantValue && cameraType) {
       if (cameraType == "capture") {
         requestCameraPermission(options)
-      }else{
+      } else {
         openLibrary(options)
       }
     }
@@ -152,11 +148,11 @@ const App: React.FC = () => {
       name: response.assets[0].fileName,
       type: response.assets[0].type || 'image/jpeg',
     };
-    
+
     const res = await getPrediction(params);
 
     if (res?.data?.class) {
-      
+
       setLabel(res.data.class);
       setResult(res.data.confidence);
     } else {
@@ -177,6 +173,8 @@ const App: React.FC = () => {
       />
       <Text style={[styles.title, { fontSize: 22 }]}>{'Plant Leaf Disease Detection'}</Text>
 
+      {image && <Text style={[styles.title, { fontSize: 22, fontWeight: "bold", top: 100, textTransform: "capitalize", color:"#FFFFFF" }]}> {'Selected Plant :'} <Text style={{ fontSize: 22, fontWeight: "bold" }}>{plantValue ? plantValue.split('_').join(" ") : ""}</Text></Text>}
+
       {(image?.length && (
         <>
           <TouchableOpacity onPress={clearOutput} style={[styles.clearStyle, { position: "absolute", zIndex: 999, marginTop: 74, marginRight: 36 }]}>
@@ -187,7 +185,7 @@ const App: React.FC = () => {
       )) ||
         null}
       {(result && label && (
-        <View style={styles.mainOuter}>
+        <View style={[styles.mainOuter, { width: "100%", paddingHorizontal: 40 }]}>
           <Text style={[styles.space, styles.labelText]}>
             {'Label: \n'}
             <Text style={styles.resultText}>{label}</Text>
@@ -195,7 +193,7 @@ const App: React.FC = () => {
           <Text style={[styles.space, styles.labelText]}>
             {'Confidence: \n'}
             <Text style={styles.resultText}>
-              {parseFloat(result).toFixed(2) + '%'}
+              {parseFloat(parseFloat(result).toFixed(2)) * 100 + '%'}
             </Text>
           </Text>
         </View>
